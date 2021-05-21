@@ -1,0 +1,39 @@
+{
+  "generator-jhipster": {
+    "promptValues": {
+      "packageName": "com.pucminas.icoleta"
+    },
+    "jhipsterVersion": "6.8.0",
+    "applicationType": "monolith",
+    "baseName": "iColeta",
+    "packageName": "com.pucminas.icoleta",
+    "packageFolder": "com/pucminas/icoleta",
+    "serverPort": "8080",
+    "authenticationType": "jwt",
+    "cacheProvider": "no",
+    "websocket": false,
+    "databaseType": "sql",
+    "devDatabaseType": "mysql",
+    "prodDatabaseType": "mysql",
+    "searchEngine": false,
+    "messageBroker": false,
+    "serviceDiscoveryType": false,
+    "buildTool": "gradle",
+    "enableSwaggerCodegen": false,
+    "jwtSecretKey": "OGRhMWI5OTc5ZjVlZTZhNWViYTU3OTBhOTE4NTgxZGZmYmIzMmI3MGUyZmEwOGI5ODk2NjAzZjMzNGIxODA2NGJlODNkZjNhNzFhNmM4MGYxNjgyZmE3ODNlOGU0MzVhYzkwNjZmZTNiY2U3YWZiNmZkNmE1NjUyMWQ4YTFmMGM=",
+    "embeddableLaunchScript": false,
+    "useSass": true,
+    "clientPackageManager": "npm",
+    "clientFramework": "angularX",
+    "clientTheme": "minty",
+    "clientThemeVariant": "primary",
+    "creationTimestamp": 1621640502637,
+    "testFrameworks": [],
+    "jhiPrefix": "jhi",
+    "entitySuffix": "",
+    "dtoSuffix": "DTO",
+    "otherModules": [],
+    "enableTranslation": false,
+    "blueprints": []
+  }
+}
