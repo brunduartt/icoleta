@@ -6,9 +6,12 @@ import { AccountService } from 'app/core/auth/account.service';
 
 @Component({
   selector: 'jhi-main',
-  templateUrl: './main.component.html'
+  templateUrl: './main.component.html',
+  styleUrls: ['main.scss']
 })
 export class MainComponent implements OnInit {
+  noCard = false;
+
   constructor(private accountService: AccountService, private titleService: Title, private router: Router) {}
 
   ngOnInit(): void {
@@ -18,6 +21,11 @@ export class MainComponent implements OnInit {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         this.updateTitle();
+      }
+      if (this.router.url === '/' || this.router.url === '/account/register' || this.router.url.search('/account/reset/') >= 0) {
+        this.noCard = true;
+      } else {
+        this.noCard = false;
       }
       if (event instanceof NavigationError && event.error.status === 404) {
         this.router.navigate(['/404']);

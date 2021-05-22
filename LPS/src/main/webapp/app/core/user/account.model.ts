@@ -1,3 +1,5 @@
+import { ICollectPoint } from 'app/shared/model/collect-point.model';
+
 export class Account {
   constructor(
     public activated: boolean,
@@ -7,6 +9,7 @@ export class Account {
     public langKey: string,
     public lastName: string,
     public login: string,
-    public imageUrl: string
+    public imageUrl: string,
+    public collectPoints: ICollectPoint[]
   ) {}
 }

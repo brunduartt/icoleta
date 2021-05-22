@@ -4,6 +4,7 @@ import com.pucminas.icoleta.config.Constants;
 
 import com.pucminas.icoleta.domain.Authority;
 import com.pucminas.icoleta.domain.User;
+import com.pucminas.icoleta.service.mapper.CollectPointMapper;
 
 import javax.validation.constraints.*;
 import java.time.Instant;
@@ -50,26 +51,12 @@ public class UserDTO {
 
     private Set<String> authorities;
 
+    private Set<CollectPointDTO> collectPoints;
+
+    private Set<Long> collectPointsId;
+
     public UserDTO() {
         // Empty constructor needed for Jackson.
-    }
-
-    public UserDTO(User user) {
-        this.id = user.getId();
-        this.login = user.getLogin();
-        this.firstName = user.getFirstName();
-        this.lastName = user.getLastName();
-        this.email = user.getEmail();
-        this.activated = user.getActivated();
-        this.imageUrl = user.getImageUrl();
-        this.langKey = user.getLangKey();
-        this.createdBy = user.getCreatedBy();
-        this.createdDate = user.getCreatedDate();
-        this.lastModifiedBy = user.getLastModifiedBy();
-        this.lastModifiedDate = user.getLastModifiedDate();
-        this.authorities = user.getAuthorities().stream()
-            .map(Authority::getName)
-            .collect(Collectors.toSet());
     }
 
     public Long getId() {
@@ -174,6 +161,22 @@ public class UserDTO {
 
     public void setAuthorities(Set<String> authorities) {
         this.authorities = authorities;
+    }
+
+    public Set<CollectPointDTO> getCollectPoints() {
+        return collectPoints;
+    }
+
+    public void setCollectPoints(Set<CollectPointDTO> collectPoints) {
+        this.collectPoints = collectPoints;
+    }
+
+    public Set<Long> getCollectPointsId() {
+        return collectPointsId;
+    }
+
+    public void setCollectPointsId(Set<Long> collectPointsId) {
+        this.collectPointsId = collectPointsId;
     }
 
     @Override

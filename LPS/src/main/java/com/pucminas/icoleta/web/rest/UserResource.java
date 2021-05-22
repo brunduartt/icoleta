@@ -7,6 +7,7 @@ import com.pucminas.icoleta.security.AuthoritiesConstants;
 import com.pucminas.icoleta.service.MailService;
 import com.pucminas.icoleta.service.UserService;
 import com.pucminas.icoleta.service.dto.UserDTO;
+import com.pucminas.icoleta.service.mapper.UserMapper;
 import com.pucminas.icoleta.web.rest.errors.BadRequestAlertException;
 import com.pucminas.icoleta.web.rest.errors.EmailAlreadyUsedException;
 import com.pucminas.icoleta.web.rest.errors.LoginAlreadyUsedException;
@@ -71,10 +72,17 @@ public class UserResource {
 
     private final MailService mailService;
 
-    public UserResource(UserService userService, UserRepository userRepository, MailService mailService) {
+    private final UserMapper userMapper;
+
+    public UserResource(UserService userService,
+                        UserRepository userRepository,
+                        MailService mailService,
+                        UserMapper userMapper
+    ) {
         this.userService = userService;
         this.userRepository = userRepository;
         this.mailService = mailService;
+        this.userMapper = userMapper;
     }
 
     /**
@@ -170,7 +178,7 @@ public class UserResource {
         log.debug("REST request to get User : {}", login);
         return ResponseUtil.wrapOrNotFound(
             userService.getUserWithAuthoritiesByLogin(login)
-                .map(UserDTO::new));
+                .map(userMapper::userToUserDTO));
     }
 
     /**

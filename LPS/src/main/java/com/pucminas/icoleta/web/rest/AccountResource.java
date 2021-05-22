@@ -7,6 +7,7 @@ import com.pucminas.icoleta.service.MailService;
 import com.pucminas.icoleta.service.UserService;
 import com.pucminas.icoleta.service.dto.PasswordChangeDTO;
 import com.pucminas.icoleta.service.dto.UserDTO;
+import com.pucminas.icoleta.service.mapper.UserMapper;
 import com.pucminas.icoleta.web.rest.errors.*;
 import com.pucminas.icoleta.web.rest.vm.KeyAndPasswordVM;
 import com.pucminas.icoleta.web.rest.vm.ManagedUserVM;
@@ -42,11 +43,18 @@ public class AccountResource {
 
     private final MailService mailService;
 
-    public AccountResource(UserRepository userRepository, UserService userService, MailService mailService) {
+    private final UserMapper userMapper;
+
+    public AccountResource(UserRepository userRepository,
+                           UserService userService,
+                           MailService mailService,
+                           UserMapper userMapper
+    ) {
 
         this.userRepository = userRepository;
         this.userService = userService;
         this.mailService = mailService;
+        this.userMapper = userMapper;
     }
 
     /**
@@ -64,7 +72,7 @@ public class AccountResource {
             throw new InvalidPasswordException();
         }
         User user = userService.registerUser(managedUserVM, managedUserVM.getPassword());
-        mailService.sendActivationEmail(user);
+       // mailService.sendActivationEmail(user);
     }
 
     /**
@@ -102,7 +110,7 @@ public class AccountResource {
     @GetMapping("/account")
     public UserDTO getAccount() {
         return userService.getUserWithAuthorities()
-            .map(UserDTO::new)
+            .map(userMapper::userToUserDTO)
             .orElseThrow(() -> new AccountResourceException("User could not be found"));
     }
 

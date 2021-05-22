@@ -3,10 +3,39 @@
 @import '~bootswatch/dist/minty/variables';
 @import '~bootstrap/scss/variables';
 
+@font-face {
+  font-family: 'Ubuntu';
+  src: url('../fonts/Ubuntu-Regular.ttf') format('truetype');
+  font-style: normal;
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: 'Ubuntu';
+  src: url('../fonts/Ubuntu-Bold.ttf') format('truetype');
+  font-style: normal;
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: 'Ubuntu';
+  src: url('../fonts/Ubuntu-Light.ttf') format('truetype');
+  font-style: normal;
+  font-weight: lighter;
+}
+
 /* ==============================================================
 Bootstrap tweaks
 ===============================================================*/
-
+* {
+  font-family: 'Ubuntu', sans-serif !important;
+}
+.btn {
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 body,
 h1,
 h2,
@@ -14,7 +43,16 @@ h3,
 h4 {
   font-weight: 300;
 }
-
+html {
+  height: 100%;
+}
+body {
+  height: 100%;
+  background-color: #e5e5e5;
+}
+.bold {
+  font-weight: bold;
+}
 a:hover {
   /* make sure browsers use the pointer cursor for anchors, even with no href */
   cursor: pointer;
@@ -24,6 +62,9 @@ a:hover {
   color: $dropdown-link-hover-color;
 }
 
+.form-control {
+  height: 48px !important;
+}
 /* ==========================================================================
 Browser Upgrade Prompt
 ========================================================================== */
@@ -161,6 +202,15 @@ ui bootstrap tweaks
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.icoleta-img {
+  flex: 1;
+  background-image: url('../../content/images/icoleta-img.png');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  max-width: 460px;
 }
 
 /* jhipster-needle-scss-add-main JHipster will add new css style */

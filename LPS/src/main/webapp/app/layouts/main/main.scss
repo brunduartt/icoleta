@@ -1,0 +1,25 @@
+.router-card-container {
+  width: 50%;
+  min-width: 812px;
+  background: white;
+  margin: 20px 0px;
+  padding: 20px;
+  border-radius: 20px;
+}
+.router-full-container {
+  width: 100%;
+  background-image: url('../../../content/images/cloud-bg.png');
+  background-size: 40vw;
+  background-position-y: bottom;
+  background-position-x: 60vw;
+  background-repeat: no-repeat;
+}
+.router-wrapper {
+  flex: 1;
+}
+
+.page-wrapper {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}

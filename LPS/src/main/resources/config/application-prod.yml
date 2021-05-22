@@ -31,6 +31,10 @@ spring:
       enabled: false
     livereload:
       enabled: false
+  profiles:
+    active: prod
+    include:
+      - no-liquibase
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     url: jdbc:mysql://localhost:3306/iColeta?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
@@ -45,10 +49,12 @@ spring:
         prepStmtCacheSqlLimit: 2048
         useServerPrepStmts: true
   jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     show-sql: false
-  # Replace by 'prod, faker' to add the faker context and have sample data loaded in production
+    hibernate:
+      ddl-auto: update
   liquibase:
-    contexts: prod
+    contexts: prod # Replace by 'prod, faker' to add the faker context and have sample data loaded in production
   mail:
     host: localhost
     port: 25

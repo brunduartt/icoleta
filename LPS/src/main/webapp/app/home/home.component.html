@@ -1,43 +1,47 @@
-<div class="row">
-    <div class="col-md-3">
-        <span class="hipster img-fluid rounded"></span>
-    </div>
-
-    <div class="col-md-9">
-        <h1 class="display-4">Welcome, Java Hipster!</h1>
-
-        <p class="lead">This is your homepage</p>
-
-        <div [ngSwitch]="isAuthenticated()">
-            <div class="alert alert-success" *ngSwitchCase="true">
-                <span id="home-logged-message" *ngIf="account">You are logged in as user "{{ account.login }}".</span>
+<div class="d-flex justify-content-around home-wrapper">
+    <div class="col-md-8 main-container d-flex flex-column align-items-center justify-content-center">
+        <div class="col-md-6 d-flex flex-column justify-content-center">
+            <h1 class="bold">Encontre aqui o seu<br> ponto de coleta de resíduos.</h1>
+            <div>
+                <div class="alert alert-danger" *ngIf="authenticationError">
+                    <strong>Erro no login!</strong> Por favor, cheque suas credenciais e tente novamente.
+                </div>
             </div>
 
-            <div class="alert alert-warning" *ngSwitchCase="false">
-                <span>If you want to </span>
-                <a class="alert-link" (click)="login()">sign in</a><span>, you can try the default accounts:<br/>- Administrator (login="admin" and password="admin") <br/>- User (login="user" and password="user").</span>
-            </div>
+            <div>
+                <form class="form" role="form" (ngSubmit)="login()" [formGroup]="loginForm">
+                    <h5 class="bold">Por favor insira os seus dados abaixo</h5>
+                    <div class="form-group">
+                        <label class="username-label" for="username">Usuário</label>
+                        <input type="text" class="form-control" name="username" id="username" placeholder="Seu usuário"
+                            formControlName="username" #username>
+                    </div>
 
-            <div class="alert alert-warning" *ngSwitchCase="false">
-                <span>You don't have an account yet?</span>&nbsp;
-                <a class="alert-link" routerLink="account/register">Register a new account</a>
+                    <div class="form-group">
+                        <label for="password">Senha</label>
+                        <input type="password" class="form-control" name="password" id="password" placeholder="Sua senha"
+                            formControlName="password">
+                    </div>
+
+                    <div class="form-check">
+                        <label class="form-check-label" for="rememberMe">
+                            <input class="form-check-input" type="checkbox" name="rememberMe" id="rememberMe" formControlName="rememberMe">
+                            <span>Lembrar de mim</span>
+                        </label>
+                    </div>
+
+                    <button type="submit" style="width: 100%; margin-top: 30px;" class="btn btn-primary">Entrar</button>
+                </form>
+
+                <div style="width: 100%; margin: 10px 0px;" class="btn btn-secondary" (click)="register()">
+                    &nbsp; Cadastre uma nova conta
+                </div>
+
+                <a (click)="requestResetPassword()">Esqueceu sua senha?</a>
             </div>
         </div>
+    </div>
+    <div class="icoleta-img">
 
-        <p>
-            If you have any question on JHipster:
-        </p>
-
-        <ul>
-            <li><a href="https://www.jhipster.tech/" target="_blank" rel="noopener noreferrer">JHipster homepage</a></li>
-            <li><a href="http://stackoverflow.com/tags/jhipster/info" target="_blank" rel="noopener noreferrer">JHipster on Stack Overflow</a></li>
-            <li><a href="https://github.com/jhipster/generator-jhipster/issues?state=open" target="_blank" rel="noopener noreferrer">JHipster bug tracker</a></li>
-            <li><a href="https://gitter.im/jhipster/generator-jhipster" target="_blank" rel="noopener noreferrer">JHipster public chat room</a></li>
-            <li><a href="https://twitter.com/jhipster" target="_blank" rel="noopener noreferrer">follow @jhipster on Twitter</a></li>
-        </ul>
-
-        <p>
-            <span>If you like JHipster, don't forget to give us a star on</span> <a href="https://github.com/jhipster/generator-jhipster" target="_blank" rel="noopener noreferrer">GitHub</a>!
-        </p>
     </div>
 </div>

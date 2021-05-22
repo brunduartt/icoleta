@@ -7,6 +7,7 @@ import { StateStorageService } from 'app/core/auth/state-storage.service';
 
 import { SERVER_API_URL } from 'app/app.constants';
 import { Account } from 'app/core/user/account.model';
+import { CollectPointService } from 'app/entities/collect-point/collect-point.service';
 
 @Injectable({ providedIn: 'root' })
 export class AccountService {
@@ -14,7 +15,12 @@ export class AccountService {
   private authenticationState = new ReplaySubject<Account | null>(1);
   private accountCache$?: Observable<Account | null>;
 
-  constructor(private http: HttpClient, private stateStorageService: StateStorageService, private router: Router) {}
+  constructor(
+    private http: HttpClient,
+    private stateStorageService: StateStorageService,
+    private router: Router,
+    private collectPointService: CollectPointService
+  ) {}
 
   save(account: Account): Observable<{}> {
     return this.http.post(SERVER_API_URL + 'api/account', account);
@@ -42,10 +48,16 @@ export class AccountService {
           return of(null);
         }),
         tap((account: Account | null) => {
-          this.authenticate(account);
-
           if (account) {
+            this.collectPointService.query({ 'userLogin.equals': account.login }).subscribe(res => {
+              if (res.body) {
+                account.collectPoints = res.body;
+              }
+              this.authenticate(account);
+            });
             this.navigateToStoredUrl();
+          } else {
+            this.authenticate(account);
           }
         }),
         shareReplay()

@@ -8,7 +8,6 @@ Navbar
 
 .navbar-version {
   font-size: 0.65em;
-  color: $navbar-dark-color;
 }
 
 .profile-image {
@@ -33,7 +32,19 @@ Navbar
   a.nav-link {
     font-weight: 400;
   }
-
+  .navbar-brand {
+    margin-left: 30px;
+    margin-top: 17px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .navbar-title {
+    font-weight: bold;
+    color: $gray-700;
+    margin: 0px 0px 0px 5px;
+  }
   .navbar-toggler {
     &:hover {
       color: $navbar-dark-hover-color;
@@ -49,6 +60,6 @@ Logo styles
   width: 45px;
   display: inline-block;
   vertical-align: middle;
-  background: url('../../../content/images/logo-jhipster.png') no-repeat center center;
+  background: url('../../../content/images/recycle-symbol.png') no-repeat center center;
   background-size: contain;
 }

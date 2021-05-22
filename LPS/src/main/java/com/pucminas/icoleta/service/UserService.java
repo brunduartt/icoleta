@@ -2,13 +2,17 @@ package com.pucminas.icoleta.service;
 
 import com.pucminas.icoleta.config.Constants;
 import com.pucminas.icoleta.domain.Authority;
+import com.pucminas.icoleta.domain.CollectPoint;
 import com.pucminas.icoleta.domain.User;
 import com.pucminas.icoleta.repository.AuthorityRepository;
+import com.pucminas.icoleta.repository.CollectPointRepository;
 import com.pucminas.icoleta.repository.UserRepository;
 import com.pucminas.icoleta.security.AuthoritiesConstants;
 import com.pucminas.icoleta.security.SecurityUtils;
 import com.pucminas.icoleta.service.dto.UserDTO;
 
+import com.pucminas.icoleta.service.mapper.CollectPointMapper;
+import com.pucminas.icoleta.service.mapper.UserMapper;
 import io.github.jhipster.security.RandomUtil;
 
 import org.slf4j.Logger;
@@ -40,10 +44,25 @@ public class UserService {
 
     private final AuthorityRepository authorityRepository;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthorityRepository authorityRepository) {
+    private final CollectPointMapper collectPointMapper;
+
+    private final CollectPointRepository collectPointRepository;
+
+    private final UserMapper userMapper;
+
+    public UserService(UserRepository userRepository,
+                       PasswordEncoder passwordEncoder,
+                       AuthorityRepository authorityRepository,
+                       CollectPointMapper collectPointMapper,
+                       CollectPointRepository collectPointRepository,
+                       UserMapper userMapper
+    ) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authorityRepository = authorityRepository;
+        this.collectPointMapper = collectPointMapper;
+        this.collectPointRepository = collectPointRepository;
+        this.userMapper = userMapper;
     }
 
     public Optional<User> activateRegistration(String key) {
@@ -105,10 +124,10 @@ public class UserService {
         }
         newUser.setImageUrl(userDTO.getImageUrl());
         newUser.setLangKey(userDTO.getLangKey());
-        // new user is not active
-        newUser.setActivated(false);
+        // new user is active
+        newUser.setActivated(true);
         // new user gets registration key
-        newUser.setActivationKey(RandomUtil.generateActivationKey());
+       // newUser.setActivationKey(RandomUtil.generateActivationKey());
         Set<Authority> authorities = new HashSet<>();
         authorityRepository.findById(AuthoritiesConstants.USER).ifPresent(authorities::add);
         newUser.setAuthorities(authorities);
@@ -152,6 +171,11 @@ public class UserService {
                 .map(Optional::get)
                 .collect(Collectors.toSet());
             user.setAuthorities(authorities);
+        }
+        if(userDTO.getCollectPointsId() != null) {
+            Set<CollectPoint> collectPoints = userDTO.getCollectPointsId().stream().map(collectPointRepository::findById)
+                .filter(Optional::isPresent).map(Optional::get).collect(Collectors.toSet());
+            user.setCollectPoints(collectPoints);
         }
         userRepository.save(user);
         log.debug("Created Information for User: {}", user);
@@ -210,10 +234,13 @@ public class UserService {
                     .filter(Optional::isPresent)
                     .map(Optional::get)
                     .forEach(managedAuthorities::add);
+                Set<CollectPoint> collectPoints = userDTO.getCollectPointsId().stream().map(collectPointRepository::findById)
+                    .filter(Optional::isPresent).map(Optional::get).collect(Collectors.toSet());
+                user.setCollectPoints(collectPoints);
                 log.debug("Changed Information for User: {}", user);
                 return user;
             })
-            .map(UserDTO::new);
+            .map(userMapper::userToUserDTO);
     }
 
     public void deleteUser(String login) {
@@ -239,7 +266,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public Page<UserDTO> getAllManagedUsers(Pageable pageable) {
-        return userRepository.findAllByLoginNot(pageable, Constants.ANONYMOUS_USER).map(UserDTO::new);
+        return userRepository.findAllByLoginNot(pageable, Constants.ANONYMOUS_USER).map(userMapper::userToUserDTO);
     }
 
     @Transactional(readOnly = true)
