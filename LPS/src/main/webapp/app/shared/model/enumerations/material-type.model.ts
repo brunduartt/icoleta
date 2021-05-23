@@ -1,4 +1,4 @@
-export const enum MaterialType {
+export enum MaterialType {
   LAMP = 'LAMP',
   BATTERY = 'BATTERY',
   PAPER = 'PAPER',

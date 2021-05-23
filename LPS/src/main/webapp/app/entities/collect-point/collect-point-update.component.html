@@ -1,8 +1,7 @@
 <div class="row justify-content-center">
     <div class="col-8">
         <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
-            <h2 id="jhi-collect-point-heading">Create or edit a Collect Point</h2>
-
+            <h2 id="jhi-collect-point-heading" style="margin: 20px 0px;" class="bold">Cadastro do<br>ponto de coleta</h2>
             <div>
                 <jhi-alert-error></jhi-alert-error>
 
@@ -12,29 +11,35 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="form-control-label" for="field_name">Name</label>
+                    <label class="form-control-label" for="field_name">Nome</label>
                     <input type="text" class="form-control" name="name" id="field_name"
                            formControlName="name"/>
                     <div *ngIf="editForm.get('name')!.invalid && (editForm.get('name')!.dirty || editForm.get('name')!.touched)">
                         <small class="form-text text-danger"
                                *ngIf="editForm.get('name')?.errors?.required">
-                        This field is required.
+                        Campo obrigatório.
                         </small>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-control-label" for="field_description">Description</label>
+                    <label class="form-control-label" for="field_description">Descrição</label>
                     <input type="text" class="form-control" name="description" id="field_description"
                            formControlName="description"/>
                     <div *ngIf="editForm.get('description')!.invalid && (editForm.get('description')!.dirty || editForm.get('description')!.touched)">
                         <small class="form-text text-danger"
                                *ngIf="editForm.get('description')?.errors?.required">
-                        This field is required.
+                        Campo obrigatório.
                         </small>
                     </div>
                 </div>
-
+                <div style="width: 100%;height: 300px;"
+                        leaflet 
+                        [(leafletCenter)]="center"
+                        [leafletOptions]="options"
+                        (leafletMapReady)="onMapReady($event)"
+                        >
+                </div>
                 <div class="form-group">
                     <label class="form-control-label" for="field_lat">Lat</label>
                     <input type="number" class="form-control" name="lat" id="field_lat"
@@ -42,11 +47,11 @@
                     <div *ngIf="editForm.get('lat')!.invalid && (editForm.get('lat')!.dirty || editForm.get('lat')!.touched)">
                         <small class="form-text text-danger"
                                *ngIf="editForm.get('lat')?.errors?.required">
-                        This field is required.
+                        Campo obrigatório.
                         </small>
                         <small class="form-text text-danger"
                             [hidden]="!editForm.get('lat')?.errors?.number">
-                            This field should be a number.
+                            Este campo deve ser um número.
                         </small>
                     </div>
                 </div>
@@ -58,37 +63,44 @@
                     <div *ngIf="editForm.get('lon')!.invalid && (editForm.get('lon')!.dirty || editForm.get('lon')!.touched)">
                         <small class="form-text text-danger"
                                *ngIf="editForm.get('lon')?.errors?.required">
-                        This field is required.
+                        Campo obrigatório.
                         </small>
                         <small class="form-text text-danger"
                             [hidden]="!editForm.get('lon')?.errors?.number">
-                            This field should be a number.
+                            Este campo deve ser um número.
                         </small>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="field_materials">Materials</label>
-                    <select class="form-control" id="field_materials" multiple name="materials" formControlName="materials">
+                    <label for="field_materials">Materiais</label>
+                    <div class="d-flex flex-wrap justify-content-center">
+                        <div (click)="addRemoveMaterial(materialOption)" *ngFor="let materialOption of materials; trackBy: trackById" [ngClass]="getMaterialTypeClass(materialOption)">
+                            <div class="item-icon">
+                            </div>
+                            <span>{{materialOption.name}}</span>
+                        </div>
+                    </div>
+                    <!-- select class="form-control" id="field_materials" multiple name="materials" formControlName="materials">
                         <option [ngValue]="getSelected(editForm.get('materials')!.value, materialOption)" *ngFor="let materialOption of materials; trackBy: trackById">{{ materialOption.name }}</option>
-                    </select>
+                    </select-->
                 </div>
 
-                <div class="form-group">
+<!--                  <div class="form-group">
                     <label for="field_users">Users</label>
                     <select class="form-control" id="field_users" multiple name="users" formControlName="users">
                         <option [ngValue]="getSelected(editForm.get('users')!.value, userOption)" *ngFor="let userOption of users; trackBy: trackById">{{ userOption.login }}</option>
                     </select>
-                </div>
+                </div>  -->
             </div>
 
-            <div>
-                <button type="button" id="cancel-save" class="btn btn-secondary" (click)="previousState()">
-                    <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancel</span>
+            <div class="d-flex">
+                <button type="button" style="width: 100%;" id="cancel-save" class="btn btn-secondary" (click)="previousState()">
+                    <fa-icon *ngIf='canEdit' icon="ban"></fa-icon>&nbsp;<span>{{canEdit ? 'Cancelar' : 'Voltar'}}</span>
                 </button>
 
-                <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary">
-                    <fa-icon icon="save"></fa-icon>&nbsp;<span>Save</span>
+                <button *ngIf='canEdit' type="submit" style="width: 100%; margin-left: 5px;" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon icon="save"></fa-icon>&nbsp;<span>Salvar</span>
                 </button>
             </div>
         </form>

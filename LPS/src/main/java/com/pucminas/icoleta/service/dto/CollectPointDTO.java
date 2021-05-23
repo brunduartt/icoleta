@@ -10,7 +10,7 @@ import java.util.Objects;
  * A DTO for the {@link com.pucminas.icoleta.domain.CollectPoint} entity.
  */
 public class CollectPointDTO implements Serializable {
-    
+
     private Long id;
 
     @NotNull
@@ -26,8 +26,7 @@ public class CollectPointDTO implements Serializable {
     private Double lon;
 
     private Set<MaterialDTO> materials = new HashSet<>();
-    private Set<UserDTO> users = new HashSet<>();
-    
+
     public Long getId() {
         return id;
     }
@@ -76,13 +75,6 @@ public class CollectPointDTO implements Serializable {
         this.materials = materials;
     }
 
-    public Set<UserDTO> getUsers() {
-        return users;
-    }
-
-    public void setUsers(Set<UserDTO> users) {
-        this.users = users;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -114,7 +106,6 @@ public class CollectPointDTO implements Serializable {
             ", lat=" + getLat() +
             ", lon=" + getLon() +
             ", materials='" + getMaterials() + "'" +
-            ", users='" + getUsers() + "'" +
             "}";
     }
 }

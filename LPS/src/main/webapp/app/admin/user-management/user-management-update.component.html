@@ -21,7 +21,7 @@
                     <div *ngIf="editForm.get('login')!.invalid && (editForm.get('login')!.dirty || editForm.get('login')!.touched)">
                         <small class="form-text text-danger"
                                *ngIf="editForm.get('login')?.errors?.required">
-                            This field is required.
+                            Campo obrigatório.
                         </small>
 
                         <small class="form-text text-danger"
@@ -69,7 +69,7 @@
                     <div *ngIf="editForm.get('email')!.invalid && (editForm.get('email')!.dirty || editForm.get('email')!.touched)">
                         <small class="form-text text-danger"
                                *ngIf="editForm.get('email')?.errors?.required">
-                            This field is required.
+                            Campo obrigatório.
                         </small>
 
                         <small class="form-text text-danger"

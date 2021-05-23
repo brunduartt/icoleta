@@ -7,22 +7,30 @@ import { Observable } from 'rxjs';
 
 import { ICollectPoint, CollectPoint } from 'app/shared/model/collect-point.model';
 import { CollectPointService } from './collect-point.service';
-import { IMaterial } from 'app/shared/model/material.model';
+import { IMaterial, Material } from 'app/shared/model/material.model';
 import { MaterialService } from 'app/entities/material/material.service';
 import { IUser } from 'app/core/user/user.model';
 import { UserService } from 'app/core/user/user.service';
+import { MaterialType } from 'app/shared/model/enumerations/material-type.model';
+import { circle, latLng, polygon, tileLayer, Map, Marker, marker, LatLng, Icon } from 'leaflet';
+import { DomSanitizer } from '@angular/platform-browser';
 
 type SelectableEntity = IMaterial | IUser;
 
 @Component({
   selector: 'jhi-collect-point-update',
-  templateUrl: './collect-point-update.component.html'
+  templateUrl: './collect-point-update.component.html',
+  styleUrls: ['collect-point.scss']
 })
 export class CollectPointUpdateComponent implements OnInit {
   isSaving = false;
   materials: IMaterial[] = [];
   users: IUser[] = [];
-
+  MaterialType = MaterialType;
+  positionMarker: Marker | undefined;
+  map: Map | undefined;
+  center: LatLng | undefined;
+  canEdit = false;
   editForm = this.fb.group({
     id: [],
     name: [null, [Validators.required]],
@@ -32,22 +40,50 @@ export class CollectPointUpdateComponent implements OnInit {
     materials: [],
     users: []
   });
-
+  options = {
+    layers: [tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 20, attribution: '' })],
+    zoom: 15,
+    center: latLng(-19.912998, -43.940933)
+  };
   constructor(
     protected collectPointService: CollectPointService,
     protected materialService: MaterialService,
     protected userService: UserService,
     protected activatedRoute: ActivatedRoute,
+    private domSanitizer: DomSanitizer,
     private fb: FormBuilder
   ) {}
 
   ngOnInit(): void {
-    this.activatedRoute.data.subscribe(({ collectPoint }) => {
-      this.updateForm(collectPoint);
-
-      this.materialService.query().subscribe((res: HttpResponse<IMaterial[]>) => (this.materials = res.body || []));
-
+    this.center = new LatLng(-19.912998, -43.940933);
+    this.activatedRoute.data.subscribe(data => {
+      const collectPoint = data['collectPoint'];
+      this.canEdit = data['canEdit'];
+      this.materialService.query().subscribe((res: HttpResponse<IMaterial[]>) => {
+        this.materials = res.body || [];
+        this.updateForm(collectPoint);
+      });
+      if (!this.canEdit) {
+        this.editForm.disable();
+      }
       this.userService.query().subscribe((res: HttpResponse<IUser[]>) => (this.users = res.body || []));
+    });
+  }
+
+  onMapReady(map: Map): any {
+    this.map = map;
+    this.map.on('click', e => {
+      console.log(this.canEdit);
+      if (this.canEdit) {
+        if (this.positionMarker) {
+          // check
+          this.map!.removeLayer(this.positionMarker); // remove
+        }
+        this.positionMarker = marker(e['latlng']);
+        this.editForm.get('lat')!.setValue(e['latlng'].lat);
+        this.editForm.get('lon')!.setValue(e['latlng'].lng);
+        this.positionMarker.addTo(this.map!);
+      }
     });
   }
 
@@ -58,13 +94,36 @@ export class CollectPointUpdateComponent implements OnInit {
       description: collectPoint.description,
       lat: collectPoint.lat,
       lon: collectPoint.lon,
-      materials: collectPoint.materials,
+      materials: collectPoint.materials || [],
       users: collectPoint.users
     });
+    if (collectPoint.materials) {
+      collectPoint.materials.forEach(material => {
+        const index = this.materials.findIndex(m => m.id === material.id);
+        if (index >= 0) {
+          this.materials[index].checked = true;
+        }
+      });
+    }
+    if (collectPoint.lat && collectPoint.lon) {
+      const pointLatLng = new LatLng(collectPoint.lat, collectPoint.lon);
+      this.center = pointLatLng;
+      this.positionMarker = marker(pointLatLng);
+      this.positionMarker.addTo(this.map!);
+    }
   }
 
   previousState(): void {
     window.history.back();
+  }
+
+  getMaterialTypeClass(materialOption: IMaterial): any {
+    return (
+      'material-option material-type-' +
+      materialOption.materialType!.toString().toLowerCase() +
+      ' ' +
+      (materialOption.checked ? 'checked' : 'not-checked')
+    );
   }
 
   save(): void {
@@ -77,7 +136,14 @@ export class CollectPointUpdateComponent implements OnInit {
     }
   }
 
+  addRemoveMaterial(material: Material): void {
+    if (this.editForm.get('materials')!.enabled) {
+      material.checked = !material.checked;
+    }
+  }
+
   private createFromForm(): ICollectPoint {
+    const list = this.materials.filter(m => m.checked);
     return {
       ...new CollectPoint(),
       id: this.editForm.get(['id'])!.value,
@@ -85,7 +151,7 @@ export class CollectPointUpdateComponent implements OnInit {
       description: this.editForm.get(['description'])!.value,
       lat: this.editForm.get(['lat'])!.value,
       lon: this.editForm.get(['lon'])!.value,
-      materials: this.editForm.get(['materials'])!.value,
+      materials: list,
       users: this.editForm.get(['users'])!.value
     };
   }
@@ -118,6 +184,7 @@ export class CollectPointUpdateComponent implements OnInit {
         }
       }
     }
+    console.log(option);
     return option;
   }
 }

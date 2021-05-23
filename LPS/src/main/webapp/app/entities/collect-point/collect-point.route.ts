@@ -51,7 +51,7 @@ export const collectPointRoute: Routes = [
   },
   {
     path: ':id/view',
-    component: CollectPointDetailComponent,
+    component: CollectPointUpdateComponent,
     resolve: {
       collectPoint: CollectPointResolve
     },
@@ -68,6 +68,7 @@ export const collectPointRoute: Routes = [
       collectPoint: CollectPointResolve
     },
     data: {
+      canEdit: true,
       authorities: [Authority.USER],
       pageTitle: 'CollectPoints'
     },
@@ -80,6 +81,7 @@ export const collectPointRoute: Routes = [
       collectPoint: CollectPointResolve
     },
     data: {
+      canEdit: true,
       authorities: [Authority.USER],
       pageTitle: 'CollectPoints'
     },

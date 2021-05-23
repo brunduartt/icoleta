@@ -1,0 +1,55 @@
+.my-leaflet-map-container img {
+  max-height: none;
+}
+.material-option {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 150px;
+  height: 150px;
+  padding: 10px;
+  margin: 5px;
+  border-radius: 10px;
+  text-align: center;
+  background: #f0f0f5;
+  .item-icon {
+    background-size: contain;
+    height: 50px;
+    width: 50px;
+    margin-bottom: 4px;
+  }
+  &.material-type-battery {
+    .item-icon {
+      background-image: url('../../../content/images/battery.png');
+    }
+  }
+  &.material-type-oil {
+    .item-icon {
+      background-image: url('../../../content/images/oil.png');
+    }
+  }
+  &.material-type-organic {
+    .item-icon {
+      background-image: url('../../../content/images/organic.png');
+    }
+  }
+  &.material-type-eletronic {
+    .item-icon {
+      background-image: url('../../../content/images/eletronic.png');
+    }
+  }
+  &.material-type-paper {
+    .item-icon {
+      background-image: url('../../../content/images/paper.png');
+    }
+  }
+  &.material-type-lamp {
+    .item-icon {
+      background-image: url('../../../content/images/lamp.png');
+    }
+  }
+  &.checked {
+    background: #c6ffdf;
+  }
+}

@@ -6,8 +6,15 @@ export interface IMaterial {
   name?: string;
   materialType?: MaterialType;
   collectPoints?: ICollectPoint[];
+  checked: boolean;
 }
 
 export class Material implements IMaterial {
-  constructor(public id?: number, public name?: string, public materialType?: MaterialType, public collectPoints?: ICollectPoint[]) {}
+  constructor(
+    public id?: number,
+    public name?: string,
+    public materialType?: MaterialType,
+    public collectPoints?: ICollectPoint[],
+    public checked = false
+  ) {}
 }
