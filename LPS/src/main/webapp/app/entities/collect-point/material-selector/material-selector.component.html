@@ -1,0 +1,7 @@
+<div class="d-flex flex-wrap justify-content-center">
+    <div (click)="addRemoveMaterial(materialOption)" *ngFor="let materialOption of materials;" [ngClass]="getMaterialTypeClass(materialOption)">
+        <div class="item-icon">
+        </div>
+        <span>{{materialOption.name}}</span>
+    </div>
+</div>

@@ -1,0 +1,26 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <h2 id="jhi-collect-point-heading" style="margin: 20px 0px;" class="bold">Procurar por<br>ponto de coleta</h2>
+        <div>
+            <div style="width: 100%;height: 300px;"
+                    leaflet 
+                    [(leafletCenter)]="center"
+                    [leafletOptions]="options"
+                    (leafletMapReady)="onMapReady($event)"
+                    >
+            </div>
+
+            <div class="form-group">
+                <label for="field_materials">Materiais</label>
+                <jhi-material-selector #selector initAllChecked='true' (changedSelect)='loadPage()'></jhi-material-selector>
+            </div>
+
+        </div>
+
+        <div class="d-flex">
+            <button type="button" style="width: 100%;" id="cancel-save" class="btn btn-secondary" (click)="previousState()">
+               <span>Voltar</span>
+            </button>
+        </div>
+    </div>
+</div>

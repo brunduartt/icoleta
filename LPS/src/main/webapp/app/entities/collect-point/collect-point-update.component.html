@@ -1,7 +1,8 @@
 <div class="row justify-content-center">
     <div class="col-8">
         <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
-            <h2 id="jhi-collect-point-heading" style="margin: 20px 0px;" class="bold">Cadastro do<br>ponto de coleta</h2>
+            <h2 *ngIf="canEdit" id="jhi-collect-point-heading" style="margin: 20px 0px;" class="bold">Cadastro do<br>ponto de coleta</h2>
+            <h2 *ngIf="!canEdit" id="jhi-collect-point-heading" style="margin: 20px 0px;" class="bold">Ponto de Coleta</h2>
             <div>
                 <jhi-alert-error></jhi-alert-error>
 
@@ -74,13 +75,14 @@
 
                 <div class="form-group">
                     <label for="field_materials">Materiais</label>
-                    <div class="d-flex flex-wrap justify-content-center">
+                    <jhi-material-selector #materialSelector name="materials" ngDefaultControl [formControl]="editForm.get('materials')!"></jhi-material-selector>
+    <!--                <div class="d-flex flex-wrap justify-content-center">
                         <div (click)="addRemoveMaterial(materialOption)" *ngFor="let materialOption of materials; trackBy: trackById" [ngClass]="getMaterialTypeClass(materialOption)">
                             <div class="item-icon">
                             </div>
                             <span>{{materialOption.name}}</span>
                         </div>
-                    </div>
+                    </div> -->
                     <!-- select class="form-control" id="field_materials" multiple name="materials" formControlName="materials">
                         <option [ngValue]="getSelected(editForm.get('materials')!.value, materialOption)" *ngFor="let materialOption of materials; trackBy: trackById">{{ materialOption.name }}</option>
                     </select-->

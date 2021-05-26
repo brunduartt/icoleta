@@ -3,6 +3,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 
 import { AccountService } from 'app/core/auth/account.service';
 import { Account } from 'app/core/user/account.model';
+import { ICollectPoint } from 'app/shared/model/collect-point.model';
 
 @Component({
   selector: 'jhi-settings',
@@ -11,6 +12,7 @@ import { Account } from 'app/core/user/account.model';
 export class SettingsComponent implements OnInit {
   account!: Account;
   success = false;
+  userPoints: ICollectPoint[] = [];
   settingsForm = this.fb.group({
     firstName: [undefined, [Validators.required, Validators.minLength(1), Validators.maxLength(50)]],
     lastName: [undefined, [Validators.required, Validators.minLength(1), Validators.maxLength(50)]],
@@ -27,7 +29,6 @@ export class SettingsComponent implements OnInit {
           lastName: account.lastName,
           email: account.email
         });
-
         this.account = account;
       }
     });

@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -97,8 +98,11 @@ public class CollectPointResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of collectPoints in body.
      */
     @GetMapping("/collect-points")
-    public ResponseEntity<List<CollectPointDTO>> getAllCollectPoints(CollectPointCriteria criteria, Pageable pageable) {
+    public ResponseEntity<List<CollectPointDTO>> getAllCollectPoints(CollectPointCriteria criteria, Pageable pageable, @RequestParam(value="pageable", required = false) Boolean isPageable) {
         log.debug("REST request to get CollectPoints by criteria: {}", criteria);
+        if(isPageable == Boolean.FALSE) {
+            pageable = PageRequest.of(0, Integer.MAX_VALUE);
+        }
         Page<CollectPointDTO> page = collectPointQueryService.findByCriteria(criteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());

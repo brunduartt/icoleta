@@ -2,7 +2,9 @@ package com.pucminas.icoleta.service;
 
 import java.util.List;
 
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Predicate;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -104,12 +106,29 @@ public class CollectPointQueryService extends QueryService<CollectPoint> {
                 specification = specification.and(buildRangeSpecification(criteria.getLon(), CollectPoint_.lon));
             }
             if (criteria.getMaterialsId() != null) {
-                specification = specification.and(buildSpecification(criteria.getMaterialsId(),
-                    root -> root.join(CollectPoint_.materials, JoinType.LEFT).get(Material_.id)));
+                if(criteria.getMaterialsId().getIn() != null && !criteria.getMaterialsId().getIn().isEmpty()) {
+                    specification = specification.and(((root, query, criteriaBuilder) -> {
+                        Join<CollectPoint, Material> join = root.join(CollectPoint_.materials, JoinType.LEFT);
+                        query.distinct(true);
+                        Predicate p = null;
+                        for(Long id : criteria.getMaterialsId().getIn()) {
+                            if(p == null) {
+                                p = criteriaBuilder.equal(join.get(Material_.id), id);
+                            } else {
+                                p = criteriaBuilder.or(p, criteriaBuilder.equal(join.get(Material_.id), id));
+                            }
+
+                        }
+                        return p;
+                    }));
+                } else {
+                    specification = specification.and(buildSpecification(criteria.getMaterialsId(),
+                        root -> root.join(CollectPoint_.materials, JoinType.LEFT).get(Material_.id)));
+                }
             }
             if (criteria.getMaterialType() != null) {
                 specification = specification.and(buildSpecification(criteria.getMaterialType(),
-                    root -> root.join(CollectPoint_.materials, JoinType.LEFT).join(Material_.materialType)));
+                    root -> root.join(CollectPoint_.materials, JoinType.LEFT).get(Material_.materialType)));
             }
             if (criteria.getUserId() != null) {
                 specification = specification.and(buildSpecification(criteria.getUserId(),

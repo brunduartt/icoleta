@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { FormBuilder, Validators } from '@angular/forms';
@@ -14,6 +14,7 @@ import { UserService } from 'app/core/user/user.service';
 import { MaterialType } from 'app/shared/model/enumerations/material-type.model';
 import { circle, latLng, polygon, tileLayer, Map, Marker, marker, LatLng, Icon } from 'leaflet';
 import { DomSanitizer } from '@angular/platform-browser';
+import { MaterialSelectorComponent } from './material-selector/material-selector.component';
 
 type SelectableEntity = IMaterial | IUser;
 
@@ -31,6 +32,7 @@ export class CollectPointUpdateComponent implements OnInit {
   map: Map | undefined;
   center: LatLng | undefined;
   canEdit = false;
+  collectPoint: ICollectPoint | undefined;
   editForm = this.fb.group({
     id: [],
     name: [null, [Validators.required]],
@@ -45,24 +47,28 @@ export class CollectPointUpdateComponent implements OnInit {
     zoom: 15,
     center: latLng(-19.912998, -43.940933)
   };
+  @ViewChild('materialSelector') materialSelector: MaterialSelectorComponent | undefined;
   constructor(
     protected collectPointService: CollectPointService,
     protected materialService: MaterialService,
     protected userService: UserService,
     protected activatedRoute: ActivatedRoute,
     private domSanitizer: DomSanitizer,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private elementRef: ElementRef
   ) {}
 
   ngOnInit(): void {
     this.center = new LatLng(-19.912998, -43.940933);
+    this.editForm.get('lat')!.disable();
+    this.editForm.get('lon')!.disable();
+    console.log('init');
     this.activatedRoute.data.subscribe(data => {
-      const collectPoint = data['collectPoint'];
+      console.log('lol');
+      this.collectPoint = data['collectPoint'];
+      console.log(this.collectPoint);
+      this.updateForm(this.collectPoint!);
       this.canEdit = data['canEdit'];
-      this.materialService.query().subscribe((res: HttpResponse<IMaterial[]>) => {
-        this.materials = res.body || [];
-        this.updateForm(collectPoint);
-      });
       if (!this.canEdit) {
         this.editForm.disable();
       }
@@ -72,6 +78,7 @@ export class CollectPointUpdateComponent implements OnInit {
 
   onMapReady(map: Map): any {
     this.map = map;
+    if (this.collectPoint) this.updateForm(this.collectPoint);
     this.map.on('click', e => {
       console.log(this.canEdit);
       if (this.canEdit) {
@@ -94,22 +101,18 @@ export class CollectPointUpdateComponent implements OnInit {
       description: collectPoint.description,
       lat: collectPoint.lat,
       lon: collectPoint.lon,
-      materials: collectPoint.materials || [],
+      materials: [],
       users: collectPoint.users
     });
     if (collectPoint.materials) {
-      collectPoint.materials.forEach(material => {
-        const index = this.materials.findIndex(m => m.id === material.id);
-        if (index >= 0) {
-          this.materials[index].checked = true;
-        }
-      });
+      const ids = collectPoint.materials.map(m => m.id);
+      this.editForm.get('materials')!.patchValue(ids);
     }
-    if (collectPoint.lat && collectPoint.lon) {
+    if (this.map && collectPoint.lat && collectPoint.lon) {
       const pointLatLng = new LatLng(collectPoint.lat, collectPoint.lon);
       this.center = pointLatLng;
       this.positionMarker = marker(pointLatLng);
-      this.positionMarker.addTo(this.map!);
+      this.positionMarker.addTo(this.map);
     }
   }
 
@@ -143,7 +146,10 @@ export class CollectPointUpdateComponent implements OnInit {
   }
 
   private createFromForm(): ICollectPoint {
-    const list = this.materials.filter(m => m.checked);
+    let list: IMaterial[] = [];
+    if (this.materialSelector) {
+      list = this.materialSelector.getCheckedMaterials();
+    }
     return {
       ...new CollectPoint(),
       id: this.editForm.get(['id'])!.value,

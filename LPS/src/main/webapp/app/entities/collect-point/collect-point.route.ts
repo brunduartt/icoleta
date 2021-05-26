@@ -12,6 +12,7 @@ import { CollectPointService } from './collect-point.service';
 import { CollectPointComponent } from './collect-point.component';
 import { CollectPointDetailComponent } from './collect-point-detail.component';
 import { CollectPointUpdateComponent } from './collect-point-update.component';
+import { CollectPointMapComponent } from './collect-point-map/collect-point-map.component';
 
 @Injectable({ providedIn: 'root' })
 export class CollectPointResolve implements Resolve<ICollectPoint> {
@@ -38,6 +39,14 @@ export class CollectPointResolve implements Resolve<ICollectPoint> {
 export const collectPointRoute: Routes = [
   {
     path: '',
+    component: CollectPointMapComponent,
+    data: {
+      pageTitle: 'CollectPoints'
+    },
+    canActivate: [UserRouteAccessService]
+  },
+  {
+    path: 'table',
     component: CollectPointComponent,
     resolve: {
       pagingParams: JhiResolvePagingParams
@@ -52,6 +61,7 @@ export const collectPointRoute: Routes = [
   {
     path: ':id/view',
     component: CollectPointUpdateComponent,
+    runGuardsAndResolvers: 'always',
     resolve: {
       collectPoint: CollectPointResolve
     },

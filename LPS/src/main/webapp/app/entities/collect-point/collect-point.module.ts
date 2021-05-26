@@ -7,10 +7,19 @@ import { CollectPointDetailComponent } from './collect-point-detail.component';
 import { CollectPointUpdateComponent } from './collect-point-update.component';
 import { CollectPointDeleteDialogComponent } from './collect-point-delete-dialog.component';
 import { collectPointRoute } from './collect-point.route';
+import { MaterialSelectorComponent } from './material-selector/material-selector.component';
+import { CollectPointMapComponent } from './collect-point-map/collect-point-map.component';
 
 @NgModule({
   imports: [IColetaSharedModule, RouterModule.forChild(collectPointRoute)],
-  declarations: [CollectPointComponent, CollectPointDetailComponent, CollectPointUpdateComponent, CollectPointDeleteDialogComponent],
+  declarations: [
+    CollectPointComponent,
+    CollectPointDetailComponent,
+    CollectPointUpdateComponent,
+    CollectPointDeleteDialogComponent,
+    MaterialSelectorComponent,
+    CollectPointMapComponent
+  ],
   entryComponents: [CollectPointDeleteDialogComponent]
 })
 export class IColetaCollectPointModule {}
