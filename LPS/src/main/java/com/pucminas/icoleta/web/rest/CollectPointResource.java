@@ -1,6 +1,9 @@
 package com.pucminas.icoleta.web.rest;
 
+import com.pucminas.icoleta.domain.User;
+import com.pucminas.icoleta.security.SecurityUtils;
 import com.pucminas.icoleta.service.CollectPointService;
+import com.pucminas.icoleta.service.UserService;
 import com.pucminas.icoleta.web.rest.errors.BadRequestAlertException;
 import com.pucminas.icoleta.service.dto.CollectPointDTO;
 import com.pucminas.icoleta.service.dto.CollectPointCriteria;
@@ -45,9 +48,15 @@ public class CollectPointResource {
 
     private final CollectPointQueryService collectPointQueryService;
 
-    public CollectPointResource(CollectPointService collectPointService, CollectPointQueryService collectPointQueryService) {
+    private final UserService userService;
+
+    public CollectPointResource(CollectPointService collectPointService,
+                                CollectPointQueryService collectPointQueryService,
+                                UserService userService
+    ) {
         this.collectPointService = collectPointService;
         this.collectPointQueryService = collectPointQueryService;
+        this.userService = userService;
     }
 
     /**
@@ -63,6 +72,8 @@ public class CollectPointResource {
         if (collectPointDTO.getId() != null) {
             throw new BadRequestAlertException("A new collectPoint cannot already have an ID", ENTITY_NAME, "idexists");
         }
+        User user = userService.getCurrentUser();
+        collectPointDTO.setCreatedById(user.getId());
         CollectPointDTO result = collectPointService.save(collectPointDTO);
         return ResponseEntity.created(new URI("/api/collect-points/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
@@ -84,6 +95,8 @@ public class CollectPointResource {
         if (collectPointDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+        Long createdById = collectPointService.findOne(collectPointDTO.getId()).get().getCreatedById();
+        collectPointDTO.setCreatedById(createdById);
         CollectPointDTO result = collectPointService.save(collectPointDTO);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, collectPointDTO.getId().toString()))
@@ -131,6 +144,19 @@ public class CollectPointResource {
         log.debug("REST request to get CollectPoint : {}", id);
         Optional<CollectPointDTO> collectPointDTO = collectPointService.findOne(id);
         return ResponseUtil.wrapOrNotFound(collectPointDTO);
+    }
+
+
+    /**
+     * {@code GET  /collect-points} : get all the collectPoints from logged user
+     *
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of collectPoints in body.
+     */
+    @GetMapping("/collect-points/user")
+    public ResponseEntity<List<CollectPointDTO>> getAllCollectPointsLoggedUser() {
+        log.debug("REST request to get CollectPoints crated by user");
+        List<CollectPointDTO> list = collectPointService.findAllLoggedUser();
+        return ResponseEntity.ok().body(list);
     }
 
     /**

@@ -12,7 +12,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Service Implementation for managing {@link CollectPoint}.
@@ -56,6 +59,17 @@ public class CollectPointService {
         log.debug("Request to get all CollectPoints");
         return collectPointRepository.findAll(pageable)
             .map(collectPointMapper::toDto);
+    }
+
+    /**
+     * Get all the collectPoints from logged user
+     *
+     * @return the list of entities.
+     */
+    @Transactional(readOnly = true)
+    public List<CollectPointDTO> findAllLoggedUser() {
+        log.debug("Request to get all CollectPoints");
+        return collectPointRepository.findByCreatedByIsCurrentUser().stream().map(collectPointMapper::toDto).collect(Collectors.toList());
     }
 
     /**

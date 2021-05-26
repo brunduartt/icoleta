@@ -32,5 +32,11 @@
                                  referencedColumnNames="id"
                                  referencedTableName="jhi_user"/>
         
+        <addForeignKeyConstraint baseColumnNames="created_by_id"
+                                 baseTableName="collect_point"
+                                 constraintName="fk_collect_point_created_by_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="jhi_user"/>
+
     </changeSet>
 </databaseChangeLog>

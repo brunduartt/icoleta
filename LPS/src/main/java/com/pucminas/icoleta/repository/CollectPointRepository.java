@@ -17,6 +17,9 @@ import java.util.Optional;
 @Repository
 public interface CollectPointRepository extends JpaRepository<CollectPoint, Long>, JpaSpecificationExecutor<CollectPoint> {
 
+    @Query("select collectPoint from CollectPoint collectPoint where collectPoint.createdBy.login = ?#{principal.username}")
+    List<CollectPoint> findByCreatedByIsCurrentUser();
+
     @Query(value = "select distinct collectPoint from CollectPoint collectPoint left join fetch collectPoint.materials left join fetch collectPoint.users",
         countQuery = "select count(distinct collectPoint) from CollectPoint collectPoint")
     Page<CollectPoint> findAllWithEagerRelationships(Pageable pageable);

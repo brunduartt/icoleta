@@ -211,4 +211,39 @@ ui bootstrap tweaks
   max-width: 460px;
 }
 
+.cursor-pointer {
+  cursor: pointer;
+}
+.primary-color {
+  color: $primary;
+}
+.collect-point-card {
+  display: flex;
+  height: 90px;
+  border-radius: 8px;
+  margin: 10px 0px;
+  align-items: center;
+  box-shadow: 1px 1px 2px black;
+  .collect-point-tag {
+    width: 30px;
+    align-self: stretch;
+    background: $primary;
+    border-radius: 8px 0px 0px 8px;
+    margin-right: 10px;
+  }
+  .collect-point-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    h6 {
+      font-weight: bold;
+      color: $primary;
+    }
+  }
+  .btn {
+    margin: 5px 10px;
+  }
+}
+
 /* jhipster-needle-scss-add-main JHipster will add new css style */

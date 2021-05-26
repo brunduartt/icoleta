@@ -1,6 +1,8 @@
 package com.pucminas.icoleta.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
@@ -46,6 +48,11 @@ public class CollectPoint implements Serializable {
 
     @ManyToMany(mappedBy = "collectPoints")
     private Set<User> users = new HashSet<>();
+
+    @ManyToOne(optional = false)
+    @NotNull
+    @JsonIgnoreProperties("collectPoints")
+    private User createdBy;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -155,6 +162,15 @@ public class CollectPoint implements Serializable {
     public void setUsers(Set<User> users) {
         this.users = users;
     }
+
+    public User getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(User createdBy) {
+        this.createdBy = createdBy;
+    }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override

@@ -3,6 +3,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 
 import { AccountService } from 'app/core/auth/account.service';
 import { Account } from 'app/core/user/account.model';
+import { CollectPointService } from 'app/entities/collect-point/collect-point.service';
 import { ICollectPoint } from 'app/shared/model/collect-point.model';
 
 @Component({
@@ -19,7 +20,11 @@ export class SettingsComponent implements OnInit {
     email: [undefined, [Validators.required, Validators.minLength(5), Validators.maxLength(254), Validators.email]]
   });
 
-  constructor(private accountService: AccountService, private fb: FormBuilder) {}
+  constructor(private accountService: AccountService, private fb: FormBuilder, private collectPointService: CollectPointService) {}
+
+  previousState(): void {
+    window.history.back();
+  }
 
   ngOnInit(): void {
     this.accountService.identity().subscribe(account => {
@@ -30,6 +35,9 @@ export class SettingsComponent implements OnInit {
           email: account.email
         });
         this.account = account;
+        this.collectPointService.findAllFromCurrentUser().subscribe(res => {
+          this.userPoints = res.body || [];
+        });
       }
     });
   }

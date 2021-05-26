@@ -307,4 +307,8 @@ public class UserService {
         return authorityRepository.findAll().stream().map(Authority::getName).collect(Collectors.toList());
     }
 
+    public User getCurrentUser() {
+        return getUserWithAuthoritiesByLogin(SecurityUtils.getCurrentUserLogin().get()).get();
+    }
+
 }

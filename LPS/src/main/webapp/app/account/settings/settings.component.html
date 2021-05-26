@@ -83,15 +83,22 @@
                         </small>
                     </div>
                 </div>
-
-                <button type="submit" [disabled]="settingsForm.invalid" class="btn btn-primary">Salvar</button>
+                <div class="d-flex justify-content-stretch">
+                    <button type="submit" [disabled]="settingsForm.invalid" class="btn btn-primary" style="width: 100%;">Salvar</button>
+                    <button type="button" class="btn btn-secondary" (click)="previousState()" style="margin-left: 5px; width: 100%;">Voltar</button>
+                </div>
             </form>
-
-            <div *ngFor='let point in userPoints'>
-                <div>
+            <h3 class="bold primary-color" style="margin: 10px 0px;">Meus pontos de coleta</h3>
+            <h6 *ngIf='userPoints.length == 0'>Nenhum ponto de coleta cadastrado.</h6>
+            <div class="collect-point-card cursor-pointer" *ngFor='let point of userPoints' routerLink='/collect-point/{{point.id}}/edit'>
+                <div class='collect-point-tag'></div>
+                <div class='collect-point-info'>
                     <h6>{{point.name}}</h6>
                     <span>{{point.description}}</span>
                 </div>
+                <button class='collect-point-edit btn btn-primary' routerLink='/collect-point/{{point.id}}/edit'>
+                    Editar
+                </button>
             </div>    
         </div>
     </div>

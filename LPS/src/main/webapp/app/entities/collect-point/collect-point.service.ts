@@ -35,4 +35,8 @@ export class CollectPointService {
   delete(id: number): Observable<HttpResponse<{}>> {
     return this.http.delete(`${this.resourceUrl}/${id}`, { observe: 'response' });
   }
+
+  findAllFromCurrentUser(): Observable<EntityArrayResponseType> {
+    return this.http.get<ICollectPoint[]>(`${this.resourceUrl}/user`, { observe: 'response' });
+  }
 }

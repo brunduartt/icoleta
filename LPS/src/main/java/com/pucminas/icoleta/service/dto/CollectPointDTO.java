@@ -27,6 +27,10 @@ public class CollectPointDTO implements Serializable {
 
     private Set<MaterialDTO> materials = new HashSet<>();
 
+    private Long createdById;
+
+    private String createdByLogin;
+
     public Long getId() {
         return id;
     }
@@ -75,6 +79,21 @@ public class CollectPointDTO implements Serializable {
         this.materials = materials;
     }
 
+    public Long getCreatedById() {
+        return createdById;
+    }
+
+    public void setCreatedById(Long createdById) {
+        this.createdById = createdById;
+    }
+
+    public String getCreatedByLogin() {
+        return createdByLogin;
+    }
+
+    public void setCreatedByLogin(String createdByLogin) {
+        this.createdByLogin = createdByLogin;
+    }
 
     @Override
     public boolean equals(Object o) {

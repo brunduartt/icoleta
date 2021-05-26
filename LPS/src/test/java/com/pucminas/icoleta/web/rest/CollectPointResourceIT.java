@@ -96,6 +96,11 @@ public class CollectPointResourceIT {
             .description(DEFAULT_DESCRIPTION)
             .lat(DEFAULT_LAT)
             .lon(DEFAULT_LON);
+        // Add required entity
+        User user = UserResourceIT.createEntity(em);
+        em.persist(user);
+        em.flush();
+        collectPoint.setCreatedBy(user);
         return collectPoint;
     }
     /**
@@ -110,6 +115,11 @@ public class CollectPointResourceIT {
             .description(UPDATED_DESCRIPTION)
             .lat(UPDATED_LAT)
             .lon(UPDATED_LON);
+        // Add required entity
+        User user = UserResourceIT.createEntity(em);
+        em.persist(user);
+        em.flush();
+        collectPoint.setCreatedBy(user);
         return collectPoint;
     }
 
@@ -714,6 +724,22 @@ public class CollectPointResourceIT {
 
         // Get all the collectPointList where users equals to usersId + 1
         defaultCollectPointShouldNotBeFound("usersId.equals=" + (usersId + 1));
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllCollectPointsByCreatedByIsEqualToSomething() throws Exception {
+        // Get already existing entity
+        User createdBy = collectPoint.getCreatedBy();
+        collectPointRepository.saveAndFlush(collectPoint);
+        Long createdById = createdBy.getId();
+
+        // Get all the collectPointList where createdBy equals to createdById
+        defaultCollectPointShouldBeFound("createdById.equals=" + createdById);
+
+        // Get all the collectPointList where createdBy equals to createdById + 1
+        defaultCollectPointShouldNotBeFound("createdById.equals=" + (createdById + 1));
     }
 
     /**

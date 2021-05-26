@@ -3,8 +3,11 @@ package com.pucminas.icoleta.service.dto;
 import java.io.Serializable;
 import java.util.Objects;
 import io.github.jhipster.service.Criteria;
+import io.github.jhipster.service.filter.BooleanFilter;
 import io.github.jhipster.service.filter.DoubleFilter;
 import io.github.jhipster.service.filter.Filter;
+import io.github.jhipster.service.filter.FloatFilter;
+import io.github.jhipster.service.filter.IntegerFilter;
 import io.github.jhipster.service.filter.LongFilter;
 import io.github.jhipster.service.filter.StringFilter;
 
@@ -39,6 +42,8 @@ public class CollectPointCriteria implements Serializable, Criteria {
 
     private MaterialCriteria.MaterialTypeFilter materialType;
 
+    private LongFilter createdById;
+
     public CollectPointCriteria() {
     }
 
@@ -52,6 +57,7 @@ public class CollectPointCriteria implements Serializable, Criteria {
         this.userId = other.userId == null ? null : other.userId.copy();
         this.userLogin = other.userLogin == null ? null : other.userLogin.copy();
         this.materialType = other.materialType == null ? null : other.materialType.copy();
+        this.createdById = other.createdById == null ? null : other.createdById.copy();
     }
 
     @Override
@@ -131,6 +137,14 @@ public class CollectPointCriteria implements Serializable, Criteria {
         this.userLogin = userLogin;
     }
 
+    public LongFilter getCreatedById() {
+        return createdById;
+    }
+
+    public void setCreatedById(LongFilter createdById) {
+        this.createdById = createdById;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -175,6 +189,8 @@ public class CollectPointCriteria implements Serializable, Criteria {
             ", userId=" + userId +
             ", userLogin=" + userLogin +
             ", materialType=" + materialType +
+            ", createdById=" + createdById +
             '}';
     }
+
 }

@@ -138,6 +138,10 @@ public class CollectPointQueryService extends QueryService<CollectPoint> {
                 specification = specification.and(buildSpecification(criteria.getUserLogin(),
                     root -> root.join(CollectPoint_.users, JoinType.LEFT).get(User_.login)));
             }
+            if (criteria.getCreatedById() != null) {
+                specification = specification.and(buildSpecification(criteria.getCreatedById(),
+                    root -> root.join(CollectPoint_.createdBy, JoinType.LEFT).get(User_.id)));
+            }
         }
         return specification;
     }

@@ -9,6 +9,8 @@ export interface ICollectPoint {
   lon?: number;
   materials?: IMaterial[];
   users?: IUser[];
+  createdByLogin?: string;
+  createdById?: number;
 }
 
 export class CollectPoint implements ICollectPoint {
@@ -19,6 +21,8 @@ export class CollectPoint implements ICollectPoint {
     public lat?: number,
     public lon?: number,
     public materials?: IMaterial[],
-    public users?: IUser[]
+    public users?: IUser[],
+    public createdByLogin?: string,
+    public createdById?: number
   ) {}
 }

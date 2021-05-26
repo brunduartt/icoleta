@@ -13,8 +13,7 @@ import { CollectPointDeleteDialogComponent } from './collect-point-delete-dialog
 
 @Component({
   selector: 'jhi-collect-point',
-  templateUrl: './collect-point.component.html',
-  styleUrls: ['collect-point.scss']
+  templateUrl: './collect-point.component.html'
 })
 export class CollectPointComponent implements OnInit, OnDestroy {
   collectPoints?: ICollectPoint[];
