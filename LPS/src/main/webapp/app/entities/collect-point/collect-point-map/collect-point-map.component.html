@@ -11,7 +11,13 @@
             </div>
 
             <div class="form-group">
-                <label for="field_materials">Materiais</label>
+                <div class="d-flex justify-content-between align-items-center">
+                    <h4 for="field_materials" class="bold" style="margin: 25px 0px 15px;">Filtro</h4>
+                    <span>
+                        Selecione um ou mais ítens abaixo
+                    </span>
+                </div>
+
                 <jhi-material-selector #selector initAllChecked='true' (changedSelect)='loadPage()'></jhi-material-selector>
             </div>
 
